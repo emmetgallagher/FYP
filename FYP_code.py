@@ -20,8 +20,8 @@ CONFIG_FILE = "robot_config.json"
 
 DEFAULT_CONFIG = {
     "motor_settings": {
-        "forward_speed": 70,
-        "turn_speed": 60,  # Base turn speed for turning maneuvers
+        "forward_speed": 60,
+        "turn_speed": 40,  # Base turn speed for turning maneuvers
         "ramp_duration": 0.2,
         "turn_duration": 0.5,
         "invert_left_motor": False,
@@ -224,11 +224,11 @@ def init_gyroscope():
     try:
         bus.write_byte_data(gyro_address, 0xFE, 0x05)
         time.sleep(0.1)
-        logger.info("✅ Gyroscope initialized successfully")
+        logger.info("Gyroscope initialized successfully")
         gyro_initialized = True
         return True
     except OSError as e:
-        logger.error(f"❌ Gyroscope initialization error: {e}")
+        logger.error(f"Gyroscope initialization error: {e}")
         gyro_initialized = False
         return False
 
@@ -1348,7 +1348,7 @@ def test_forward_ultrasonic():
         print("\nTest aborted by user")
         return False
     finally:
-        # Make sure we stop the robot
+        # Make sure to stop the robot
         stop()
         print("Robot stopped")
 
@@ -1385,10 +1385,7 @@ def avoid_obstacle():
     move_forward_distance(0.3)
 
 def execute_path(path):
-    """
-    Modified execute_path function that prevents premature stopping when seeing destination QR code.
-    QR verification is only performed at the final destination, not during travel.
-    """
+    
     global robot_orientation
     if emergency_stop_flag:
         return False
@@ -1599,7 +1596,7 @@ def navigate_to_destination():
         stop()
         return False
 
-# ============================ DUMMY CALIBRATION STUBS ============================
+
 def calibrate_motors():
     logger.info("Calibrate motors stub...")
 
@@ -1650,13 +1647,7 @@ def get_stable_heading(duration=2.0, sample_rate=100):
     return total_angle % 360
 
 def calibrate_gyro_factor():
-    """
-    Run a calibration routine to adjust the gyro fudge factor (gyro_factor).
-    The user is prompted to perform a turn at the normal navigation turn speed (30%).
-    The routine then measures the gyro reading before and after the turn, and the user inputs
-    the actual turn in degrees. The ratio of actual turn / gyro-measured turn becomes the gyro_factor,
-    which is saved in the config.
-    """
+    
     global CONFIG
     print("=== Gyro Factor Calibration ===")
     print("Ensure the robot is on a flat surface.")
